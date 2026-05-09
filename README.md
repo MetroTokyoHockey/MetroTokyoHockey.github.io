@@ -23,8 +23,19 @@ GitHub Pages で公開する静的サイトです。
 ## Update Flow
 
 1. `index.html` を編集
-2. GitHub に push
-3. GitHub Pages へ反映
+2. `main` ブランチへ push
+3. GitHub Actions の `Deploy GitHub Pages` が自動実行
+4. GitHub Pages へ反映
+
+## GitHub Pages Deploy
+
+GitHub Pages の deploy は GitHub Actions で自動化しています。
+
+- Workflow: `.github/workflows/deploy-pages.yml`
+- Trigger: `main` への push / `workflow_dispatch`
+- Deploy target: リポジトリ直下の静的ファイル一式
+
+初回のみ、GitHub の `Settings` > `Pages` で `Source` を `GitHub Actions` に設定してください。
 
 ## Notes
 
