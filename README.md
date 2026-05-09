@@ -1,6 +1,7 @@
 # MetroTokyoHockey.github.io
 
 GitHub Pages で公開する静的サイトです。
+`https://metrotokyohockey.github.io/`
 
 現在の構成:
 
