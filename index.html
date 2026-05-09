@@ -66,6 +66,107 @@
             border-top: 1px solid #e8eaed;
             margin: 20px 0;
         }
+        .contact-intro {
+            margin-bottom: 20px;
+        }
+        .contact-form {
+            display: grid;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .form-row {
+            display: grid;
+            gap: 8px;
+        }
+        .form-row label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #202124;
+        }
+        .form-row input,
+        .form-row select,
+        .form-row textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #d2d9e3;
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 14px;
+            color: #202124;
+            background-color: #fff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-row input:focus,
+        .form-row select:focus,
+        .form-row textarea:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12);
+        }
+        .form-row textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+        .form-hint {
+            margin: 0;
+            font-size: 12px;
+            color: #70757a;
+        }
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .checkbox-row input {
+            width: auto;
+            margin-top: 3px;
+        }
+        .form-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .submit-button {
+            border: 0;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #1a73e8, #1557b0);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+        .submit-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(26, 115, 232, 0.2);
+        }
+        .submit-button:disabled {
+            opacity: 0.7;
+            cursor: wait;
+            transform: none;
+            box-shadow: none;
+        }
+        .form-status {
+            min-height: 20px;
+            font-size: 13px;
+            margin: 0;
+        }
+        .form-status.is-error {
+            color: #c5221f;
+        }
+        .form-status.is-success {
+            color: #137333;
+        }
+        @media (max-width: 640px) {
+            body {
+                padding: 20px 12px;
+            }
+            .container {
+                padding: 24px 18px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -121,11 +222,102 @@
         <p>本アプリケーションを利用することで、ユーザーは現在および改定後の本プライバシーポリシーに記載された情報の処理に同意したものとみなされます。</p>
 
         <h2>お問い合わせ</h2>
-        <p>本アプリケーションの利用中のプライバシーに関する質問、または運用に関する質問がある場合は、サービスプロバイダーまでメール（<a href="mailto:naoki.nakanishi@metro-hockey.tokyo.jp">naoki.nakanishi@metro-hockey.tokyo.jp</a>）にてお問い合わせください。</p>
+        <p class="contact-intro">本アプリケーションの利用中のプライバシーに関する質問、または運用に関する質問がある場合は、以下のフォームをご利用ください。メールアプリを利用したい場合は <a href="mailto:naoki.nakanishi@metro-hockey.tokyo.jp">naoki.nakanishi@metro-hockey.tokyo.jp</a> への直接送信も可能です。</p>
+
+        <form id="contact-form" class="contact-form" novalidate>
+            <div class="form-row">
+                <label for="contact-name">お名前</label>
+                <input id="contact-name" name="name" type="text" autocomplete="name" required>
+            </div>
+
+            <div class="form-row">
+                <label for="contact-email">メールアドレス</label>
+                <input id="contact-email" name="email" type="email" autocomplete="email" required>
+            </div>
+
+            <div class="form-row">
+                <label for="contact-category">お問い合わせ種別</label>
+                <select id="contact-category" name="category" required>
+                    <option value="">選択してください</option>
+                    <option value="privacy">プライバシーについて</option>
+                    <option value="app">アプリについて</option>
+                    <option value="support">サポート</option>
+                    <option value="other">その他</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="contact-message">お問い合わせ内容</label>
+                <textarea id="contact-message" name="message" required></textarea>
+                <p class="form-hint">内容を確認のうえ、担当者より必要に応じて返信します。</p>
+            </div>
+
+            <div class="form-row checkbox-row">
+                <input id="contact-consent" name="consent" type="checkbox" value="agreed" required>
+                <label for="contact-consent">入力内容を送信し、プライバシーポリシーに基づく取り扱いに同意します。</label>
+            </div>
+
+            <input type="hidden" name="_subject" value="FreakTokyo お問い合わせ">
+
+            <div class="form-actions">
+                <button type="submit" class="submit-button">送信する</button>
+                <p id="form-status" class="form-status" aria-live="polite"></p>
+            </div>
+        </form>
 
         <div class="footer">
             <p>このプライバシーポリシーページは <a href="https://app-privacy-policy-generator.nisrulz.com/" target="_blank" rel="noopener">App Privacy Policy Generator</a> によって作成されました。</p>
         </div>
     </div>
+
+    <script>
+        const FORMSPREE_ENDPOINT = 'https://formspree.io/f/meenrdvd';
+        const form = document.getElementById('contact-form');
+        const status = document.getElementById('form-status');
+        const submitButton = form.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            if (FORMSPREE_ENDPOINT.includes('your-form-id')) {
+                status.textContent = '公開前に Formspree の送信先 URL を設定してください。';
+                status.className = 'form-status is-error';
+                return;
+            }
+
+            if (!form.reportValidity()) {
+                status.textContent = '未入力の項目を確認してください。';
+                status.className = 'form-status is-error';
+                return;
+            }
+
+            submitButton.disabled = true;
+            status.textContent = '送信しています...';
+            status.className = 'form-status';
+
+            try {
+                const response = await fetch(FORMSPREE_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: new FormData(form)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Submission failed');
+                }
+
+                form.reset();
+                status.textContent = 'お問い合わせを送信しました。';
+                status.className = 'form-status is-success';
+            } catch (error) {
+                status.textContent = '送信に失敗しました。時間をおいて再度お試しください。';
+                status.className = 'form-status is-error';
+            } finally {
+                submitButton.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
